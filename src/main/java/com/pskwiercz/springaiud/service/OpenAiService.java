@@ -7,8 +7,7 @@ import com.pskwiercz.springaiud.model.Question;
 public interface OpenAiService {
 
     String getAnswer(String question);
-
     Answer getAnswer(Question question);
-
     Answer getCapital(GetCapitalRequest question);
+    Answer getCapitalWithInfo(GetCapitalRequest question);
 }

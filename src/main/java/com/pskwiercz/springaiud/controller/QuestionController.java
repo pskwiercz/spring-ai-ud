@@ -17,6 +17,10 @@ public class QuestionController {
         this.openAiService = openAiService;
     }
 
+    @PostMapping("/getCapitalWithInfo")
+    public Answer getCapitalWithInfo(@RequestBody GetCapitalRequest capital) {
+        return openAiService.getCapitalWithInfo(capital);
+    }
     @PostMapping("/getCapital")
     public Answer getCapital(@RequestBody GetCapitalRequest capital) {
         return openAiService.getCapital(capital);

@@ -20,10 +20,26 @@ public class OpenAiServiceImpl implements OpenAiService {
     @Value("classpath:templates/get-capital-prompt.st")
     private Resource getCapitalPrompt;
 
+    @Value("classpath:templates/get-capital-with-info-prompt.st")
+    private Resource getCapitalWithInfoPrompt;
+
     public OpenAiServiceImpl(ChatClient.Builder chatClient) {
         this.chatClient = chatClient.build();
     }
 
+    @Override
+    public Answer getCapitalWithInfo(GetCapitalRequest getCapitalRequest) {
+
+        Prompt prompt = new PromptTemplate(getCapitalWithInfoPrompt)
+                .create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry()));
+
+        String answer = chatClient
+                .prompt(prompt)
+                .call()
+                .content();
+
+        return new Answer(answer);
+    }
     @Override
     public Answer getCapital(GetCapitalRequest getCapitalRequest) {
 
