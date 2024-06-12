@@ -1,0 +1,1 @@
+What is the capital of {stateOrCountry}? Response in JSON with the name of the city in a property named `answer`. Do not wrap the json codes in JSON markers.
