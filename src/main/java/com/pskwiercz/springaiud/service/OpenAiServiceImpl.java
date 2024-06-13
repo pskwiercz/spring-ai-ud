@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pskwiercz.springaiud.model.Answer;
 import com.pskwiercz.springaiud.model.GetCapitalRequest;
+import com.pskwiercz.springaiud.model.GetCapitalResponse;
 import com.pskwiercz.springaiud.model.Question;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.parser.BeanOutputParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -30,11 +32,32 @@ public class OpenAiServiceImpl implements OpenAiService {
     @Value("classpath:templates/get-capital-json-answer-prompt.st")
     private Resource getCapitalJsonPrompt;
 
+    @Value("classpath:templates/get-capital-response-prompt.st")
+    private Resource getCapitalResponsePrompt;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     public OpenAiServiceImpl(ChatClient.Builder chatClient) {
         this.chatClient = chatClient.build();
+    }
+
+    @Override
+    public GetCapitalResponse getCapitalResponse(GetCapitalRequest getCapitalRequest) {
+
+        BeanOutputParser<GetCapitalResponse> parser = new BeanOutputParser<>(GetCapitalResponse.class);
+        String format = parser.getFormat();
+
+        Prompt prompt = new PromptTemplate(getCapitalResponsePrompt)
+                .create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                        "format", format));
+
+        String answer = chatClient
+                .prompt(prompt)
+                .call()
+                .content();
+
+        return parser.parse(answer);
     }
 
     @Override
@@ -50,6 +73,7 @@ public class OpenAiServiceImpl implements OpenAiService {
 
         return new Answer(answer);
     }
+
     @Override
     public Answer getCapital(GetCapitalRequest getCapitalRequest) {
 

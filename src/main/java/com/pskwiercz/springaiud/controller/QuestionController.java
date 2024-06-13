@@ -2,6 +2,7 @@ package com.pskwiercz.springaiud.controller;
 
 import com.pskwiercz.springaiud.model.Answer;
 import com.pskwiercz.springaiud.model.GetCapitalRequest;
+import com.pskwiercz.springaiud.model.GetCapitalResponse;
 import com.pskwiercz.springaiud.model.Question;
 import com.pskwiercz.springaiud.service.OpenAiService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,16 @@ public class QuestionController {
         this.openAiService = openAiService;
     }
 
+    @PostMapping("/getCapitalResponse")
+    public GetCapitalResponse getCapitalResponse(@RequestBody GetCapitalRequest capital) {
+        return openAiService.getCapitalResponse(capital);
+    }
+
     @PostMapping("/getCapitalWithInfo")
     public Answer getCapitalWithInfo(@RequestBody GetCapitalRequest capital) {
         return openAiService.getCapitalWithInfo(capital);
     }
+
     @PostMapping("/getCapital")
     public Answer getCapital(@RequestBody GetCapitalRequest capital) {
         return openAiService.getCapital(capital);

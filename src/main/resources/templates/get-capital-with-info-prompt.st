@@ -4,3 +4,4 @@ What is the capital of {stateOrCountry}? Respond with the following format:
            The city is located in ```region```.
            The primary language spoken is ```language```.
            The currency used is ```currency```.
+Do not wrap the response values in markers
