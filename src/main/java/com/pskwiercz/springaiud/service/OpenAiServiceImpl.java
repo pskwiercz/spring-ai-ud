@@ -10,7 +10,7 @@ import com.pskwiercz.springaiud.model.Question;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.parser.BeanOutputParser;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -45,19 +45,18 @@ public class OpenAiServiceImpl implements OpenAiService {
     @Override
     public GetCapitalResponse getCapitalResponse(GetCapitalRequest getCapitalRequest) {
 
-        BeanOutputParser<GetCapitalResponse> parser = new BeanOutputParser<>(GetCapitalResponse.class);
-        String format = parser.getFormat();
+        BeanOutputConverter<GetCapitalResponse> converter = new BeanOutputConverter<>(GetCapitalResponse.class);
 
         Prompt prompt = new PromptTemplate(getCapitalResponsePrompt)
                 .create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
-                        "format", format));
+                        "format", converter.getFormat()));
 
         String answer = chatClient
                 .prompt(prompt)
                 .call()
                 .content();
 
-        return parser.parse(answer);
+        return converter.convert(answer);
     }
 
     @Override
