@@ -3,10 +3,7 @@ package com.pskwiercz.springaiud.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pskwiercz.springaiud.model.Answer;
-import com.pskwiercz.springaiud.model.GetCapitalRequest;
-import com.pskwiercz.springaiud.model.GetCapitalResponse;
-import com.pskwiercz.springaiud.model.Question;
+import com.pskwiercz.springaiud.model.*;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -23,7 +20,7 @@ public class OpenAiServiceImpl implements OpenAiService {
 
     private final ChatClient chatClient;
 
-    @Value("classpath:templates/get-capital-prompt.st")
+    @Value("classpath:templates/get-capital-info-response-prompt.st")
     private Resource getCapitalPrompt;
 
     @Value("classpath:templates/get-capital-with-info-prompt.st")
@@ -43,12 +40,30 @@ public class OpenAiServiceImpl implements OpenAiService {
     }
 
     @Override
+    public GetCapitalInfoResponse getCapitalInfoResponse(GetCapitalRequest getCapitalRequest) {
+
+        BeanOutputConverter<GetCapitalInfoResponse> converter = new BeanOutputConverter<>(GetCapitalInfoResponse.class);
+
+        Prompt prompt = new PromptTemplate(getCapitalPrompt)
+                .create(Map.of(
+                        "stateOrCountry", getCapitalRequest.stateOrCountry(),
+                        "format", converter.getFormat()));
+
+        String answer = chatClient
+                .prompt(prompt)
+                .call()
+                .content();
+
+        return converter.convert(answer);
+    }
+    @Override
     public GetCapitalResponse getCapitalResponse(GetCapitalRequest getCapitalRequest) {
 
         BeanOutputConverter<GetCapitalResponse> converter = new BeanOutputConverter<>(GetCapitalResponse.class);
 
         Prompt prompt = new PromptTemplate(getCapitalResponsePrompt)
-                .create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                .create(Map.of(
+                        "stateOrCountry", getCapitalRequest.stateOrCountry(),
                         "format", converter.getFormat()));
 
         String answer = chatClient

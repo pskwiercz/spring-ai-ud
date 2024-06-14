@@ -1,9 +1,6 @@
 package com.pskwiercz.springaiud.service;
 
-import com.pskwiercz.springaiud.model.Answer;
-import com.pskwiercz.springaiud.model.GetCapitalRequest;
-import com.pskwiercz.springaiud.model.GetCapitalResponse;
-import com.pskwiercz.springaiud.model.Question;
+import com.pskwiercz.springaiud.model.*;
 
 public interface OpenAiService {
 
@@ -12,4 +9,5 @@ public interface OpenAiService {
     Answer getCapital(GetCapitalRequest question);
     Answer getCapitalWithInfo(GetCapitalRequest question);
     GetCapitalResponse getCapitalResponse(GetCapitalRequest question);
+    GetCapitalInfoResponse getCapitalInfoResponse(GetCapitalRequest getCapitalRequest);
 }
