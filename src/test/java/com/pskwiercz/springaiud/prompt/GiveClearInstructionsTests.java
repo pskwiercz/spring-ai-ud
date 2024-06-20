@@ -1,14 +1,10 @@
-package com.pskwiercz.springaiud;
+package com.pskwiercz.springaiud.prompt;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
-
-/**
- * Created by jt, Spring Framework Guru.
- */
 
 @SpringBootTest
 class GiveClearInstructionsTests extends BaseTestClass {

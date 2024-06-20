@@ -1,4 +1,4 @@
-package com.pskwiercz.springaiud;
+package com.pskwiercz.springaiud.prompt;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.PromptTemplate;
